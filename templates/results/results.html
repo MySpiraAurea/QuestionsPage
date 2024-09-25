@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}
+  Результаты
+{% endblock %}
+{% block content %}
+<div class="results-container">
+    <h2 class="results-title">Результаты</h2>
+    <div class="results-card">
+        <p>Правильные ответы: {{ correct_percentage }}</p>
+        <p>Неправильные ответы: {{ incorrect_percentage }}</p>
+        <p>Неуверенные ответы: {{ uncertain_percentage }}</p>
+    </div>
+
+    <h3 class="results-title">Неправильные ответы</h3>
+    {% for answer in incorrect_questions %}
+        <div class="results-card">
+            <h4>Вопрос {{ forloop.counter }}</h4>
+            <p>{{ answer.question.text }}</p>
+            <p>Правильный ответ: {{ answer.question.correct_answer }}</p>
+        </div>
+    {% endfor %}
+
+    <h3 class="results-title">Неуверенные ответы</h3>
+    {% for answer in uncertain_questions %}
+        <div class="results-card">
+            <h4>Вопрос {{ forloop.counter }}</h4>
+            <p>{{ answer.question.text }}</p>
+            <p>Правильный ответ: {{ answer.question.correct_answer }}</p>
+        </div>
+    {% endfor %}
+
+    <!-- Добавляем кнопку "Начать тест заново" -->
+    <form action="{% url 'results:reset_answers' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="restart-button">Начать тест заново</button>
+    </form>
+</div>
+{% endblock %}
+

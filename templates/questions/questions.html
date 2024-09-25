@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}
+  Страница тестирования
+{% endblock %}
+{% block content %}
+<div class="sidebar">
+    <h3>Категории</h3>
+    <form method="get" action="{% url 'questions:questions' %}">
+        <div class="category">
+            <label><input type="checkbox" name="categories" value="python" {% if 'python' in categories %}checked{% endif %}> Python</label>
+        </div>
+        <div class="category">
+            <label><input type="checkbox" name="categories" value="oop" {% if 'oop' in categories %}checked{% endif %}> ООП</label>
+        </div>
+        <div class="category">
+            <label><input type="checkbox" name="categories" value="data_structures" {% if 'data_structures' in categories %}checked{% endif %}> Структуры и типы данных</label>
+        </div>
+        <div class="category">
+            <label><input type="checkbox" name="categories" value="git" {% if 'git' in categories %}checked{% endif %}> Git</label>
+        </div>
+        <div class="category">
+            <label><input type="checkbox" name="categories" value="linux" {% if 'linux' in categories %}checked{% endif %}> Linux</label>
+        </div>
+        <div class="category">
+            <label><input type="checkbox" name="categories" value="docker" {% if 'docker' in categories %}checked{% endif %}> Docker</label>
+        </div>
+        <div class="category">
+            <label><input type="checkbox" name="categories" value="sql" {% if 'sql' in categories %}checked{% endif %}> SQL</label>
+        </div>
+        <div class="category">
+            <label><input type="checkbox" name="categories" value="network_protocols" {% if 'network_protocols' in categories %}checked{% endif %}> Сетевые протоколы</label>
+        </div>
+        <div class="category">
+            <label><input type="checkbox" name="categories" value="django" {% if 'django' in categories %}checked{% endif %}> Django</label>
+        </div>
+        <button type="submit" class="apply-button">Применить</button>
+    </form>
+</div>
+<div class="main-content">
+    {% if questions %}
+        {% for question in questions %}
+            <div class="question-card">
+                <h2>{{ question.text }}</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="question_id" value="{{ question.id }}">
+                    <button type="submit" name="show_answer" value="true" class="show-answer-button">
+                        {% if show_answer == question.id|stringformat:"s" %}
+                            Скрыть правильный ответ
+                        {% else %}
+                            Показать правильный ответ
+                        {% endif %}
+                    </button>
+                </form>
+                {% if show_answer == question.id|stringformat:"s" %}
+                    <p class = "question-card-text"> Правильный ответ: {{ question.correct_answer }}</p>
+                {% endif %}
+                <form method="post" action="{% url 'questions:questions' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="question_id" value="{{ question.id }}">
+                    <div class="answer-buttons">
+                        <button type="submit" name="answer_status" value="correct" class="green-button">Верный ответ</button>
+                        <button type="submit" name="answer_status" value="uncertain" class="yellow-button">Неуверенный ответ</button>
+                        <button type="submit" name="answer_status" value="incorrect" class="red-button">Неправильный ответ</button>
+                    </div>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="question-card">
+            <h2>Вопросы из выбранной категории закончились</h2>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,18 @@
+{% load static %}
+<div class="navbar">
+    <div class="navbar-left">
+        <a href="{% url 'homepage:index' %}">Домашняя страница</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'questions:questions' %}">Тестирование</a>
+        {% endif %}
+    </div>
+    <div class="navbar-right">
+        {% if user.is_authenticated %}
+            <a href="{% url 'results:results' %}">Результаты</a>
+            <a href="{% url 'login:logout' %}">Выход</a>
+        {% else %}
+            <a href="{% url 'login:login' %}">Логин</a>
+            <a href="{% url 'registration:registration' %}">Регистрация</a>
+        {% endif %}
+    </div>
+</div>
